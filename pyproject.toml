@@ -1,0 +1,78 @@
+[tool.poetry]
+name = "setuptools_cpp"
+version = "0.1.0"
+description = "Simplified packaging for pybind11-based C++ extensions"
+license = "MIT"
+authors = ["David Montague <davwmont@gmail.com>"]
+readme = "README.md"
+homepage = "https://setuptools-cpp.davidmontague.xyz"
+repository = "https://github.com/dmontagu/setuptools-cpp"
+documentation = "https://setuptools-cpp.davidmontague.xyz"
+keywords = ["c++", "cpp", "extension", "pybind11", "setup", "setuptools"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Topic :: Software Development",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+setuptools = "*"
+pybind11 = "*"
+
+[tool.poetry.dev-dependencies]
+# Testing
+pytest = "*"
+pytest-cov = "*"
+coverage = "*"
+
+# CI
+codecov = "*"
+
+# Static
+isort = "*"
+autoflake = "*"
+black = { version = "*", allow-prereleases = true }
+flake8 = "*"
+mypy = "*"
+
+# Documentation
+mkdocs = "*"
+mkdocs-material = "*"
+markdown-include = "*"
+
+[tool.black]
+line-length = 120
+target_version = ['py38']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+    \.git
+    | \.mypy_cache
+    | \.pytest_cache
+    | htmlcov
+    | build
+    | pybind11
+  )/
+)
+'''
+
+[tool.isort]
+line_length = 120
+known_first_party = ["setuptools_cpp", "tests"]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+combine_as_imports = true
+skip = "pybind11"

@@ -1,0 +1,48 @@
+site_name: setuptools-cpp
+site_description: Setuptools helpers for use with C++ and pybind11
+site_url: https://setuptools-cpp.davidmontague.xyz/
+
+theme:
+  name: 'material'
+  palette:
+    primary: 'blue'
+    accent: 'yellow'
+  logo: 'img/icon-white.svg'
+  favicon: 'img/favicon.png'
+
+repo_name: dmontagu/setuptools-cpp
+repo_url: https://github.com/dmontagu/setuptools-cpp
+
+#google_analytics:
+#    - 'UA-133183413-1'
+#    - 'auto'
+
+nav:
+  - setuptools-cpp: 'index.md'
+  - User Guide: 'user-guide.md'
+  - Use with Poetry: 'use-with-poetry.md'
+  - Contributing: 'contributing.md'
+  - Release Notes: 'release-notes.md'
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - markdown.extensions.codehilite:
+      guess_lang: false
+  - markdown_include.include:
+      base_path: docs
+  - admonition
+  - codehilite
+  - extra
+  - tables
+  - smarty
+
+extra:
+  social:
+    - type: 'github'
+      link: 'https://github.com/dmontagu/setuptools-cpp'
+    - type: 'globe'
+      link: 'https://davidmontague.xyz'
+
+extra_css:
+  - 'css/custom.css'

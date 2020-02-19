@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "my_pkg"
+version = "0.1.0"
+description = "My Package with C++ Extensions"
+# ... Other keys in [tool.poetry] ...
+build = "build.py"
+
+[build-system]
+requires = ["poetry>=0.12", "setuptools", "wheel", "setuptools-cpp"]
+build-backend = "poetry.masonry.api"
+
+# ... Other sections ...
