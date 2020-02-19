@@ -42,7 +42,7 @@ def install_paths() -> Iterator[None]:
 
 def get_pybind_modules(package_name: str) -> List[Pybind11Extension]:
     return [
-        Pybind11Extension(f"{package_name}.pybind11.compiled", ["cpp/src/test_pkg.cpp"], include_dirs=["cpp/include"],)
+        Pybind11Extension(f"{package_name}.pybind11.compiled", ["cpp/src/test_pkg.cpp"], include_dirs=["cpp/include"], )
     ]
 
 
@@ -59,7 +59,15 @@ def test_install_pybind11(install_environment: None) -> None:
         cmdclass=dict(build_ext=ExtensionBuilder),
         zip_safe=False,
     )
+    import sys
 
+    print("------")
+    print(os.getcwd())
+    print(sys.path)
+    print(TESTS_DIR.resolve())
+    print(list(TESTS_DIR.iterdir()))
+    print("------")
+    assert False
     from test_pkg.pybind11.compiled import add as pybind_add
 
     assert pybind_add(1, 1) == 2
@@ -76,6 +84,7 @@ def test_install_cmake(install_environment: None) -> None:
     )
 
     import sys
+
     print("------")
     print(os.getcwd())
     print(sys.path)
