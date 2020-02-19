@@ -75,6 +75,14 @@ def test_install_cmake(install_environment: None) -> None:
         zip_safe=False,
     )
 
+    import sys
+    print("------")
+    print(os.getcwd())
+    print(sys.path)
+    print(TESTS_DIR.resolve())
+    print(list(TESTS_DIR.iterdir()))
+    print("------")
+    assert False
     from test_pkg.cmake.compiled import add as cmake_add
 
     assert cmake_add(1, 1) == 2
