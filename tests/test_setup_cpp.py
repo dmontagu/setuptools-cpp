@@ -16,7 +16,7 @@ PACKAGE_NAME = "test_pkg"
 
 @pytest.fixture
 def install_environment(monkeypatch: MonkeyPatch) -> None:
-    monkeypatch.setattr(sys, "argv", [__file__, "install"])
+    monkeypatch.setattr(sys, "argv", [__file__, "build_ext", "--inplace"])
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -24,15 +24,16 @@ def install_paths() -> Iterator[None]:
     os.chdir(TESTS_DIR)
 
     # Create package directory
-    test_pkg_dir = TESTS_DIR / PACKAGE_NAME
-    test_pkg_dir.mkdir(exist_ok=True)
+    test_pkg_dirs = [TESTS_DIR / PACKAGE_NAME / name for name in ["pybind11", "cmake"]]
+    for test_pkg_dir in test_pkg_dirs:
+        test_pkg_dir.mkdir(parents=True, exist_ok=True)
 
     yield
     for egg_path in TESTS_DIR.iterdir():
         if egg_path.name.endswith("egg-info"):
             shutil.rmtree(str(egg_path))
 
-    # Clean up build files
+    # # Clean up build files
     for folder in ["build", "dist", "var", PACKAGE_NAME]:
         folder_path = TESTS_DIR / folder
         if folder_path.exists():
@@ -49,18 +50,31 @@ def get_cmake_modules(package_name: str) -> List[CMakeExtension]:
     return [CMakeExtension(f"{package_name}.cmake.compiled", sourcedir="cpp")]
 
 
-def test_install(install_environment: None) -> None:
+def test_install_pybind11(install_environment: None) -> None:
     setup(
         name=PACKAGE_NAME,
         version=__version__,
-        ext_modules=[*get_pybind_modules(PACKAGE_NAME), *get_cmake_modules(PACKAGE_NAME)],
+        ext_modules=[*get_pybind_modules(PACKAGE_NAME)],
         packages=[PACKAGE_NAME],
         cmdclass=dict(build_ext=ExtensionBuilder),
         zip_safe=False,
     )
 
     from test_pkg.pybind11.compiled import add as pybind_add
-    from test_pkg.cmake.compiled import add as cmake_add
 
     assert pybind_add(1, 1) == 2
+
+
+def test_install_cmake(install_environment: None) -> None:
+    setup(
+        name=PACKAGE_NAME,
+        version=__version__,
+        ext_modules=[*get_cmake_modules(PACKAGE_NAME)],
+        packages=[PACKAGE_NAME],
+        cmdclass=dict(build_ext=ExtensionBuilder),
+        zip_safe=False,
+    )
+
+    from test_pkg.cmake.compiled import add as cmake_add
+
     assert cmake_add(1, 1) == 2
