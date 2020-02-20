@@ -37,12 +37,6 @@ some/directory/setuptools-cpp-SOMETHING-py3.X/bin/python
 If the output of this command shows the `python` binary in a path containing `setuptools-cpp` somewhere in the name
 (as above), then it worked! 🎉
 
-!!! tip
-    If you install a new package with `pip` under that environment, activate the environment again.
-
-    This ensures that if you use a terminal program installed by that package (like `mypy`),
-    you use the one from your local environment and not any other that could be installed globally.
-
 ### Static Code Checks
 
 This project makes use of `black`, `autoflake8`, and `isort` for formatting,

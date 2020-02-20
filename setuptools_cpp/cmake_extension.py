@@ -19,7 +19,7 @@ class CMakeExtension(Extension):
 
 def prepare_cmake_extensions(extensions: List[Extension]) -> None:
     cmake_extensions = [x for x in extensions if isinstance(x, CMakeExtension)]
-    if cmake_extensions:  # pragma: no branch
+    if cmake_extensions:
         try:
             out = subprocess.check_output(["cmake", "--version"])
         except OSError:  # pragma: no cover

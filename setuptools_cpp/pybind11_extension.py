@@ -30,7 +30,7 @@ def prepare_pybind11_extensions(
     extensions: List[Extension], compiler: CCompiler, dist_version: str, extra_opts: List[str] = None,
 ) -> None:
     pybind11_extensions = [ext for ext in extensions if isinstance(ext, Pybind11Extension)]
-    if pybind11_extensions:  # pragma: no branch
+    if pybind11_extensions:
         extra_opts = extra_opts or []
         opts, link_opts = _get_pybind11_opts(compiler, dist_version)
         for ext in pybind11_extensions:
@@ -39,8 +39,8 @@ def prepare_pybind11_extensions(
 
 
 def _get_pybind11_opts(compiler: CCompiler, dist_version: str) -> Tuple[List[str], List[str]]:
-    opts = []
-    link_opts = []
+    opts: List[str] = []
+    link_opts: List[str] = []
     compiler_type = getattr(compiler, "compiler_type")  # not necessary, but prevents mypy warnings
     if compiler_type == "unix":
         if sys.platform == "darwin":

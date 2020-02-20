@@ -52,7 +52,6 @@ ext_modules = [
     Pybind11Extension(
         "my_pkg.ext1", ["src/ext1/ext1.cpp"], include_dirs=["src/ext1/include"]
     ),
-
     # An extension with a custom <project_root>/src/ext2/CMakeLists.txt:
     CMakeExtension(f"my_pkg.ext2", sourcedir="src/ext2")
 ]
