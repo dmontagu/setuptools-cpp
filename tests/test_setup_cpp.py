@@ -1,3 +1,4 @@
+import importlib.util
 import os
 import shutil
 import sys
@@ -16,6 +17,9 @@ PACKAGE_NAME = "test_pkg"
 
 @pytest.fixture
 def install_environment(monkeypatch: MonkeyPatch) -> None:
+    sys_path = list(sys.path)
+    sys_path.insert(0, str(TESTS_DIR))
+    monkeypatch.setattr(sys, "path", sys_path)
     monkeypatch.setattr(sys, "argv", [__file__, "build_ext", "--inplace"])
 
 
@@ -33,7 +37,7 @@ def install_paths() -> Iterator[None]:
         if egg_path.name.endswith("egg-info"):
             shutil.rmtree(str(egg_path))
 
-    # # Clean up build files
+    # Clean up build files
     for folder in ["build", "dist", "var", PACKAGE_NAME]:
         folder_path = TESTS_DIR / folder
         if folder_path.exists():
@@ -42,12 +46,19 @@ def install_paths() -> Iterator[None]:
 
 def get_pybind_modules(package_name: str) -> List[Pybind11Extension]:
     return [
-        Pybind11Extension(f"{package_name}.pybind11.compiled", ["cpp/src/test_pkg.cpp"], include_dirs=["cpp/include"], )
+        Pybind11Extension(f"{package_name}.pybind11.compiled", ["cpp/src/test_pkg.cpp"], include_dirs=["cpp/include"],)
     ]
 
 
 def get_cmake_modules(package_name: str) -> List[CMakeExtension]:
     return [CMakeExtension(f"{package_name}.cmake.compiled", sourcedir="cpp")]
+
+
+def prepare_installed_module(name: str) -> None:
+    for file in (TESTS_DIR / "test_pkg" / name).iterdir():
+        if file.name.endswith(".so"):
+            spec = importlib.util.spec_from_file_location(f"test_pkg.{name}.compiled", file)
+            importlib.util.module_from_spec(spec)
 
 
 def test_install_pybind11(install_environment: None) -> None:
@@ -59,15 +70,8 @@ def test_install_pybind11(install_environment: None) -> None:
         cmdclass=dict(build_ext=ExtensionBuilder),
         zip_safe=False,
     )
-    import sys
 
-    print("------")
-    print(os.getcwd())
-    print(sys.path)
-    print(TESTS_DIR.resolve())
-    print(list(TESTS_DIR.iterdir()))
-    print("------")
-    assert False
+    prepare_installed_module("pybind11")
     from test_pkg.pybind11.compiled import add as pybind_add
 
     assert pybind_add(1, 1) == 2
@@ -83,15 +87,7 @@ def test_install_cmake(install_environment: None) -> None:
         zip_safe=False,
     )
 
-    import sys
-
-    print("------")
-    print(os.getcwd())
-    print(sys.path)
-    print(TESTS_DIR.resolve())
-    print(list(TESTS_DIR.iterdir()))
-    print("------")
-    assert False
+    prepare_installed_module("cmake")
     from test_pkg.cmake.compiled import add as cmake_add
 
     assert cmake_add(1, 1) == 2
