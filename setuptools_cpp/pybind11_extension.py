@@ -39,8 +39,8 @@ def prepare_pybind11_extensions(
 
 
 def _get_pybind11_opts(compiler: CCompiler, dist_version: str) -> Tuple[List[str], List[str]]:
-    opts = []
-    link_opts = []
+    opts: List[str] = []
+    link_opts: List[str] = []
     compiler_type = getattr(compiler, "compiler_type")  # not necessary, but prevents mypy warnings
     if compiler_type == "unix":
         if sys.platform == "darwin":
